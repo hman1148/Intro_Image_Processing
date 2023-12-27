@@ -1,23 +1,41 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(PROJECT ImageProcessing)
+set(PROJECT Image_Processing)
 set(UNIT_TEST_RUNNER UnitTestRunner)
 
 project(${PROJECT})
+
+#Add OpenCV
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+
+# Create a variable to hold the path to the "Images" folder
+set(IMAGES_DIR ${CMAKE_SOURCE_DIR}/Images)
+
+# Get a list of all image files in the "Images" folder with a .jpg extension
+# Get a list of all image files in the "Images" folder with a .jpg extension
+file(GLOB IMAGE_FILES ${IMAGES_DIR}/*.jpg)
+
+# Copy all image files from the "Images" folder to the build directory
+foreach(IMAGE_FILE ${IMAGE_FILES})
+    get_filename_component(FILE_NAME ${IMAGE_FILE} NAME)
+    configure_file(${IMAGE_FILE} ${CMAKE_BINARY_DIR}/${PROJECT}/${FILE_NAME} COPYONLY)
+endforeach()
 
 #
 # Manually specifying all the source files.
 #
 set(HEADER_FILES
-    image_processing.hpp
+    ImageProcessing.hpp
     )
 
 set(SOURCE_FILES
+    ImageProcessing.cpp
     main.cpp
     )
 
 set(UNIT_TEST_FILES
-    TestVector.cpp)
+    test.cpp)
 
 #
 # This is the main target
@@ -44,28 +62,22 @@ endif()
 
 # -------------------------------------------------------------------
 #
-# Add GoogleTest and OpenCV
+# Add GoogleTest
 #
 # -------------------------------------------------------------------
 include(FetchContent)
-
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY    https://github.com/google/googletest.git
     GIT_TAG           release-1.11.0
 )
-FetchContent_Declare(
-  opencv
-  GIT_REPOSITORY https://github.com/opencv/opencv.git
-  GIT_TAG        4.8.1
-)
-
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest opencv)
+FetchContent_MakeAvailable(googleTest)
 
 target_link_libraries(${UNIT_TEST_RUNNER} gtest_main)
-target_link_libraries(${PROJECT} PRIVATE opencv::opencv)
-#
+
+target_link_libraries(${PROJECT} ${OpenCV_LIBS})
+target_link_libraries(${UNIT_TEST_RUNNER} ${OpenCV_LIBS} gtest_main)
 #
 # Prepare a pre-build step to run clang-format over all the [ch]pp source files.
 # Start by finding the location of the clang-format executable.
