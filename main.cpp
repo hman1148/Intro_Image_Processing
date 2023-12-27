@@ -5,18 +5,19 @@
 
 int main()
 {
-    std::string imagePath = "test.jpg ";
+    // Change the path to any path you have on your system. Make sure to include double \ characters
+    std::string imagePath = "C:\\data\\Images\\test.jpg";
     cv::Mat image = cv::imread(imagePath, cv::IMREAD_COLOR);
 
     if (image.empty())
     {
-        std::cerr << "Couldn't not read the image" << imagePath << std::endl;
+        std::cerr << "Could not read the image " << imagePath << std::endl;
         return 1;
     }
 
-    std::shared_ptr<ImageProcessing> processor = std::make_shared<ImageProcessing>();
+    std::shared_ptr<ImageProcessor> processor = std::make_shared<ImageProcessor>();
 
-    std::uint8_t erosion = 3;
+    std::uint8_t erosion = 1;
     cv::Mat erodedImage = processor->erodeImage(image, erosion);
 
     cv::imshow("Original Image", image);

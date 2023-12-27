@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-class ImageProcessing
+class ImageProcessor
 {
   public:
     cv::Mat erodeImage(const cv::Mat& inputImage, std::uint8_t erosionSize);

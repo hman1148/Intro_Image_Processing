@@ -1,6 +1,6 @@
 #include "ImageProcessing.hpp"
 
-cv::Mat ImageProcessing::erodeImage(const cv::Mat& inputImage, std::uint8_t erosionSize)
+cv::Mat ImageProcessor::erodeImage(const cv::Mat& inputImage, std::uint8_t erosionSize)
 {
     // This is the basic tutorial of how to do a simple erosion to a .jpg
     cv::Mat outputImage;
